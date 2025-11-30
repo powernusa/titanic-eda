@@ -1,0 +1,12 @@
+# Ignore practice notebooks
+practice*.ipynb
+
+# Ignore Jupyter auto-saved junk
+.ipynb_checkpoints/
+
+# Ignore macOS junk
+.DS_Store
+
+# Ignore Python cache
+__pycache__/
+
