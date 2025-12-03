@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   titanic_eda:
     build: .
