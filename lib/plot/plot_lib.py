@@ -189,7 +189,8 @@ def plot_pivot_pairs(pivot_df,
     mechanics of groupby and pivot well to get pivot_df! Know this!
     
     """
-    f,ax = plt.subplots(1,1,figsize=figsize)
+    fig,ax = plt.subplots(1,1,figsize=figsize)
+    #print("edited")
     pivot_df.plot(
                     kind='bar',
                     ax=ax,
@@ -202,8 +203,9 @@ def plot_pivot_pairs(pivot_df,
     ax.legend(title=f"{legend_title}")
     # 👇 rotate x-axis tick labels
     ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
-    plt.grid(color="black", linestyle="-.", linewidth=0.5, axis="y", which="major")
-    plt.show()
+    ax.grid(color="black", linestyle="-.", linewidth=0.5, axis="y", which="major")
+    #plt.show()
+    return (plt,fig,ax)
 
 
 
