@@ -34,3 +34,11 @@ def most_frequent_values(data):
     tt['Frequence'] = vals
     tt['Percent from total'] = np.round(vals / total * 100, 3)
     return tt.T
+
+def unique_values(data):
+    total = data.count()
+    uniques = data.nunique()
+    # print(f"uniques: {uniques}")
+    tt = pd.concat([total,uniques],axis=1,keys=["Total","Uniques"])
+
+    return tt.T
