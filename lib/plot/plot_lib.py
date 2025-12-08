@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.colors import ListedColormap
 import matplotlib.pyplot as plt
+import pandas as pd
 
 def set_color_map(color_list):
     """
@@ -174,21 +175,62 @@ def sns_countplot_pairs(
     plt.show()
 
 
-def plot_pivot_pairs(pivot_df,
-                     title="title here",
-                     legend_title="legend_title here",
-                     figsize=(7,4),
-                     width=0.5):
+def plot_pivot_pairs(
+    pivot_df: pd.DataFrame,
+    title: str = "title here",
+    legend_title: str = "",
+    legend_labels: list = [],
+    figsize: tuple = (7, 4),
+    width: float = 0.5
+):
     """
+    Plot a grouped bar chart from a pivoted DataFrame using Matplotlib.
+
     Also refer to sns_countplot_pairs
 
-    This is similar to sns_countplot_pairs but this is using
-    matplotlib.pyplot.
+    Parameters
+    ----------
+    pivot_df : pd.DataFrame
+        A pivoted DataFrame where columns represent categories and the 
+        index represents groups to be plotted. Each column will be drawn 
+        as a separate series of bars.
 
-    Andy: You have to master this pivot_df. You need to understand the
-    mechanics of groupby and pivot well to get pivot_df! Know this!
-    
+    title : str, optional
+        Title of the plot.
+
+    legend_title : str, optional
+        Title displayed above the legend.
+
+    legend_labels : list, optional
+        Labels to display in the legend. Must match the number of 
+        columns in `pivot_df`.
+
+    figsize : tuple, optional
+        Figure size passed to `plt.subplots()`, formatted as (width, height).
+
+    width : float, optional
+        Width of the bars in the grouped bar chart.
+
+    Returns
+    -------
+    plt : module
+        The matplotlib.pyplot module, returned for convenience.
+
+    fig : matplotlib.figure.Figure
+        The Figure object created by plt.subplots().
+
+    ax : matplotlib.axes.Axes
+        The Axes object where all plotting elements are drawn. Useful
+        for further customization outside this function.
+
+    Notes
+    -----
+    Returning (plt, fig, ax) allows the caller to modify the figure 
+    further after creation, such as adding additional annotations,
+    saving the figure, or adjusting layout settings.
     """
+
+
     fig,ax = plt.subplots(1,1,figsize=figsize)
     #print("edited")
     pivot_df.plot(
@@ -200,7 +242,7 @@ def plot_pivot_pairs(pivot_df,
     ax.set_title(f"{title}")
 
     # ✅ Set legend title
-    ax.legend(title=f"{legend_title}")
+    ax.legend(title=f"{legend_title}",labels=legend_labels)
     # 👇 rotate x-axis tick labels
     ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
     ax.grid(color="black", linestyle="-.", linewidth=0.5, axis="y", which="major")
