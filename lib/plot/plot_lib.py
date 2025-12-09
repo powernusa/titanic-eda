@@ -175,7 +175,7 @@ def sns_countplot_pairs(
     plt.show()
 
 
-def plot_pivot_pairs(
+def plot_pivot_bar(
     pivot_df: pd.DataFrame,
     title: str = "title here",
     legend_title: str = "",
@@ -242,13 +242,55 @@ def plot_pivot_pairs(
     ax.set_title(f"{title}")
 
     # ✅ Set legend title
-    ax.legend(title=f"{legend_title}",labels=legend_labels)
+    #ax.legend(title=f"{legend_title}",labels=legend_labels)
+    ax.legend(title=legend_title,labels=legend_labels)
     # 👇 rotate x-axis tick labels
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
-    ax.grid(color="black", linestyle="-.", linewidth=0.5, axis="y", which="major")
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=0,ha="center")
+    ax.grid(color="black", linestyle="--", linewidth=0.5, alpha=0.6, axis="y", which="major")
+
+    fig.tight_layout()
     #plt.show()
     return (plt,fig,ax)
 
+def plot_hist_hue(data_df,
+                    feature,
+                    hue="set",
+                    bins=25,
+                    title="title here",
+                    legend_title="",
+                    legend_labels=[],
+                    figsize=(7,4)):
+    """
+    Also refer to sns_histplot_pairs
+    """
+    fig, ax = plt.subplots(1,1, figsize=figsize)
+
+    for i, h in enumerate(data_df[hue].unique()):
+        
+        if pd.isna(h):
+            continue
+
+        print(f"--> h: {h}")
+
+        # alpha decreases by 0.1 each iteration, minimum 0.1
+        alpha = max(1.0 - 0.1 * i, 0.1)
+
+        ax.hist(
+            data_df.loc[data_df[hue] == h, feature],
+            bins=bins,
+            edgecolor='black',
+            color=bluish_color_list[i],
+            alpha=alpha
+        )
+
+    ax.set_title(title)
+    ax.legend(title=legend_title,labels=legend_labels)
+    ax.set_xlabel(feature)
+    ax.set_ylabel("Frequency")
+    ax.grid(color="black",alpha=0.7 ,linestyle="-.", linewidth=0.5, axis="y", which="major")
+    fig.tight_layout()
+    #plt.show()
+    return (plt,fig,ax)
 
 
 def sns_histplot_pairs(data_df,feature,hue="set",bins=25,title="title here",figsize=(7,4)):

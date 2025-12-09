@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
 
-def missing_data(data):
-    total = data.isnull().sum()
-    percent = (data.isnull().sum()/data.isnull().count()*100)
-    percent = round(percent,1)
-    tt = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
+def null_data(data):
+    total_null = data.isnull().sum()
+    percent_null = (data.isnull().sum()/data.isnull().count()*100)
+    percent_null = round(percent_null,1)
+    tt = pd.concat([total_null, percent_null], axis=1, keys=['Total Null', 'Percent Null'])
     types = []
     for col in data.columns:
         dtype = str(data[col].dtype)
@@ -16,7 +16,7 @@ def missing_data(data):
 def most_frequent_values(data):
     total = data.count()
     tt = pd.DataFrame(total)
-    tt.columns = ['Total']
+    tt.columns = ['Total Non-Null']
     items = []
     vals = []
     for col in data.columns:
@@ -31,14 +31,14 @@ def most_frequent_values(data):
             vals.append(0)
             continue
     tt['Most frequent item'] = items
-    tt['Frequence'] = vals
-    tt['Percent from total'] = np.round(vals / total * 100, 3)
+    tt['Frequency'] = vals
+    tt['Percent from total non-null'] = np.round(vals / total * 100, 3)
     return tt.T
 
-def unique_values(data):
-    total = data.count()
-    uniques = data.nunique()
+def number_unique_values(data):
+    total_non_null = data.count()
+    nunique = data.nunique()
     # print(f"uniques: {uniques}")
-    tt = pd.concat([total,uniques],axis=1,keys=["Total","Uniques"])
+    tt = pd.concat([total_non_null,nunique],axis=1,keys=["Total Non-Null","Number of uniques"])
 
     return tt.T

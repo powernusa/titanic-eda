@@ -3,6 +3,8 @@ practice*.ipynb
 
 # Ignore
 temp*
+*main*
+my*
 
 # Ignore Jupyter auto-saved junk
 .ipynb_checkpoints/
