@@ -259,7 +259,8 @@ def plot_hist_hue(data_df,
                     title="title here",
                     legend_title="",
                     legend_labels=[],
-                    figsize=(7,4)):
+                    figsize=(7,4),
+                    debug=False):
     """
     Also refer to sns_histplot_pairs
     """
@@ -270,7 +271,8 @@ def plot_hist_hue(data_df,
         if pd.isna(h):
             continue
 
-        print(f"--> h: {h}")
+        if debug:
+            print(f"--> h: {h}")
 
         # alpha decreases by 0.1 each iteration, minimum 0.1
         alpha = max(1.0 - 0.1 * i, 0.1)
