@@ -99,6 +99,40 @@ def analyze_bins(data, bins=None, binwidth=None):
     return bins, binwidth
 
 
+def sns_pivot_heatmap(
+        df_pivot:pd.DataFrame,
+        title:str="title here",
+        xLabel:str="xlabel here",
+        yLabel:str="ylabel here",
+        figsize:tuple=(6,5),
+        width:float=0.5
+):
+    # ---- HEATMAP ----
+    fig, ax = plt.subplots(figsize=(6, 5))
+
+    sns.heatmap(
+        df_pivot,
+        ax=ax,
+        annot=True,
+        fmt="d",
+        cmap="Blues",
+        linewidths=width,
+        linecolor="gray"
+    )
+
+    ax.set_title(title, fontsize=14)
+    ax.set_ylabel(yLabel)
+    ax.set_xlabel(xLabel)
+
+    # ---- FULL BORDER AROUND HEATMAP ----
+    for _, spine in ax.spines.items():
+        spine.set_visible(True)
+        spine.set_linewidth(1.0)
+        spine.set_edgecolor("gray")
+
+    fig.tight_layout()
+    #plt.show()
+    return (plt,fig,ax)
 
 
 def sns_countplot_pairs(
