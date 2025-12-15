@@ -22,8 +22,8 @@ def set_color_map(color_list):
             A Matplotlib ListedColormap object constructed from the input colors.
 war
     Example:
-        >>> bluish_color_list = ["#A5D7E8", "#576CBC", "#19376D", "#0b2447"]
-        >>> cmap_custom = set_color_map(bluish_color_list)
+        >>> bluishColorList = ["#A5D7E8", "#576CBC", "#19376D", "#0b2447"]
+        >>> cmap_custom = set_color_map(bluishColorList)
         >>> # Use cmap_custom in your plot
         >>> plt.scatter(x, y, c=z, cmap=cmap_custom)
     
@@ -39,8 +39,9 @@ war
 
 
 # ✅ reusable color themes
-bluish_color_list = ["#A5D7E8", "#576CBC", "#19376D", "#0b2447"]
-warm_color_list   = ["#F6C90E", "#F45B69", "#C92C6D", "#7B1E7A"]
+bluishColorList = ["#A5D7E8", "#576CBC", "#19376D", "#0b2447"]
+warmColorList   = ["#F6C90E", "#F45B69", "#C92C6D", "#7B1E7A"]
+warmBlueColorList = ["#F45B69","#A5D7E8"]
 
 
 def analyze_bins(data, bins=None, binwidth=None):
@@ -99,23 +100,146 @@ def analyze_bins(data, bins=None, binwidth=None):
     return bins, binwidth
 
 
+def plot_pivot_bar(
+    pivot_df: pd.DataFrame,
+    title: str = "title here",
+    legendTitle: str = "",
+    legendLabels: list = [],
+    figsize: tuple = (7, 4),
+    width: float = 0.5,
+    colorList=bluishColorList
+):
+    """
+    Plot a grouped bar chart from a pivoted DataFrame using Matplotlib.
+
+    Also refer to sns_countplot_pairs
+
+    Parameters
+    ----------
+    pivot_df : pd.DataFrame
+        A pivoted DataFrame where columns represent categories and the 
+        index represents groups to be plotted. Each column will be drawn 
+        as a separate series of bars.
+
+    title : str, optional
+        Title of the plot.
+
+    legend_title : str, optional
+        Title displayed above the legend.
+
+    legend_labels : list, optional
+        Labels to display in the legend. Must match the number of 
+        columns in `pivot_df`.
+
+    figsize : tuple, optional
+        Figure size passed to `plt.subplots()`, formatted as (width, height).
+
+    width : float, optional
+        Width of the bars in the grouped bar chart.
+
+    Returns
+    -------
+    plt : module
+        The matplotlib.pyplot module, returned for convenience.
+
+    fig : matplotlib.figure.Figure
+        The Figure object created by plt.subplots().
+
+    ax : matplotlib.axes.Axes
+        The Axes object where all plotting elements are drawn. Useful
+        for further customization outside this function.
+
+    Notes
+    -----
+    Returning (plt, fig, ax) allows the caller to modify the figure 
+    further after creation, such as adding additional annotations,
+    saving the figure, or adjusting layout settings.
+    """
+
+
+    fig,ax = plt.subplots(1,1,figsize=figsize)
+    #print("edited")
+    pivot_df.plot(
+                    kind='bar',
+                    ax=ax,
+                    width=width,
+                    #color=bluishColorList[:len(pivot_df.columns)],
+                    color= colorList[:len(pivot_df.columns)]
+    )
+    ax.set_title(f"{title}")
+
+    # ✅ Set legend title
+    #ax.legend(title=f"{legend_title}",labels=legend_labels)
+    ax.legend(title=legendTitle,labels=legendLabels)
+    # 👇 rotate x-axis tick labels
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=0,ha="center")
+    ax.grid(color="black", linestyle="--", linewidth=0.5, alpha=0.6, axis="y", which="major")
+
+    fig.tight_layout()
+    #plt.show()
+    return (plt,fig,ax)
+
+def plot_hist_hue(data_df,
+                    feature,
+                    hue="set",
+                    bins=25,
+                    title="title here",
+                    legendTitle="",
+                    legendLabels=[],
+                    figsize=(7,4),
+                    debug=False):
+    """
+    Also refer to sns_histplot_pairs
+    """
+    fig, ax = plt.subplots(1,1, figsize=figsize)
+
+    for i, h in enumerate(data_df[hue].unique()):
+        
+        if pd.isna(h):
+            continue
+
+        if debug:
+            print(f"--> h: {h}")
+
+        # alpha decreases by 0.1 each iteration, minimum 0.1
+        alpha = max(1.0 - 0.1 * i, 0.1)
+
+        ax.hist(
+            data_df.loc[data_df[hue] == h, feature],
+            bins=bins,
+            edgecolor='black',
+            color=bluishColorList[i],
+            alpha=alpha
+        )
+
+    ax.set_title(title)
+    ax.legend(title=legendTitle,labels=legendLabels)
+    ax.set_xlabel(feature)
+    ax.set_ylabel("Frequency")
+    ax.grid(color="black",alpha=0.7 ,linestyle="-.", linewidth=0.5, axis="y", which="major")
+    fig.tight_layout()
+    #plt.show()
+    return (plt,fig,ax)
+
 def sns_pivot_heatmap(
         df_pivot:pd.DataFrame,
         title:str="title here",
         xLabel:str="xlabel here",
         yLabel:str="ylabel here",
         figsize:tuple=(6,5),
-        width:float=0.5
+        width:float=0.5,
+        fmt="d",
+        cmap="Blues"
 ):
     # ---- HEATMAP ----
-    fig, ax = plt.subplots(figsize=(6, 5))
+    fig, ax = plt.subplots(figsize=figsize)
 
     sns.heatmap(
         df_pivot,
         ax=ax,
         annot=True,
-        fmt="d",
-        cmap="Blues",
+        fmt=fmt,
+        cmap=cmap,
         linewidths=width,
         linecolor="gray"
     )
@@ -133,7 +257,6 @@ def sns_pivot_heatmap(
     fig.tight_layout()
     #plt.show()
     return (plt,fig,ax)
-
 
 def sns_countplot_pairs(
     data_df,
@@ -201,7 +324,7 @@ def sns_countplot_pairs(
         x=feature,
         hue=hue,
         ax=ax,
-        palette=bluish_color_list[:2],
+        palette=bluishColorList[:2],
         width=width
     )
     plt.grid(color="black", linestyle="-.", linewidth=0.5, axis="y", which="major")
@@ -209,124 +332,8 @@ def sns_countplot_pairs(
     plt.show()
 
 
-def plot_pivot_bar(
-    pivot_df: pd.DataFrame,
-    title: str = "title here",
-    legend_title: str = "",
-    legend_labels: list = [],
-    figsize: tuple = (7, 4),
-    width: float = 0.5
-):
-    """
-    Plot a grouped bar chart from a pivoted DataFrame using Matplotlib.
 
-    Also refer to sns_countplot_pairs
-
-    Parameters
-    ----------
-    pivot_df : pd.DataFrame
-        A pivoted DataFrame where columns represent categories and the 
-        index represents groups to be plotted. Each column will be drawn 
-        as a separate series of bars.
-
-    title : str, optional
-        Title of the plot.
-
-    legend_title : str, optional
-        Title displayed above the legend.
-
-    legend_labels : list, optional
-        Labels to display in the legend. Must match the number of 
-        columns in `pivot_df`.
-
-    figsize : tuple, optional
-        Figure size passed to `plt.subplots()`, formatted as (width, height).
-
-    width : float, optional
-        Width of the bars in the grouped bar chart.
-
-    Returns
-    -------
-    plt : module
-        The matplotlib.pyplot module, returned for convenience.
-
-    fig : matplotlib.figure.Figure
-        The Figure object created by plt.subplots().
-
-    ax : matplotlib.axes.Axes
-        The Axes object where all plotting elements are drawn. Useful
-        for further customization outside this function.
-
-    Notes
-    -----
-    Returning (plt, fig, ax) allows the caller to modify the figure 
-    further after creation, such as adding additional annotations,
-    saving the figure, or adjusting layout settings.
-    """
-
-
-    fig,ax = plt.subplots(1,1,figsize=figsize)
-    #print("edited")
-    pivot_df.plot(
-                    kind='bar',
-                    ax=ax,
-                    width=width,
-                    color=bluish_color_list[:len(pivot_df.columns)]
-    )
-    ax.set_title(f"{title}")
-
-    # ✅ Set legend title
-    #ax.legend(title=f"{legend_title}",labels=legend_labels)
-    ax.legend(title=legend_title,labels=legend_labels)
-    # 👇 rotate x-axis tick labels
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=0,ha="center")
-    ax.grid(color="black", linestyle="--", linewidth=0.5, alpha=0.6, axis="y", which="major")
-
-    fig.tight_layout()
-    #plt.show()
-    return (plt,fig,ax)
-
-def plot_hist_hue(data_df,
-                    feature,
-                    hue="set",
-                    bins=25,
-                    title="title here",
-                    legend_title="",
-                    legend_labels=[],
-                    figsize=(7,4),
-                    debug=False):
-    """
-    Also refer to sns_histplot_pairs
-    """
-    fig, ax = plt.subplots(1,1, figsize=figsize)
-
-    for i, h in enumerate(data_df[hue].unique()):
-        
-        if pd.isna(h):
-            continue
-
-        if debug:
-            print(f"--> h: {h}")
-
-        # alpha decreases by 0.1 each iteration, minimum 0.1
-        alpha = max(1.0 - 0.1 * i, 0.1)
-
-        ax.hist(
-            data_df.loc[data_df[hue] == h, feature],
-            bins=bins,
-            edgecolor='black',
-            color=bluish_color_list[i],
-            alpha=alpha
-        )
-
-    ax.set_title(title)
-    ax.legend(title=legend_title,labels=legend_labels)
-    ax.set_xlabel(feature)
-    ax.set_ylabel("Frequency")
-    ax.grid(color="black",alpha=0.7 ,linestyle="-.", linewidth=0.5, axis="y", which="major")
-    fig.tight_layout()
-    #plt.show()
-    return (plt,fig,ax)
+    
 
 
 def sns_histplot_pairs(data_df,feature,hue="set",bins=25,title="title here",figsize=(7,4)):
@@ -340,13 +347,13 @@ def sns_histplot_pairs(data_df,feature,hue="set",bins=25,title="title here",figs
                          x=feature,                        # 👈 tell Seaborn which column to use
                          ax=ax,
                          bins=bins,
-                         color=bluish_color_list[i],
+                         color=bluishColorList[i],
                          label=h
                         )
         # sns.histplot(data_df.loc[data_df[hue]==h,feature],
         #                     ax=ax,
         #                     bins=bins,
-        #                     color=bluish_color_list[i]
+        #                     color=bluishColorList[i]
         #                )
     ax.set_title(title)
     ax.legend(title=hue)
@@ -363,7 +370,7 @@ def plot_hist_pairs(data_df,feature,hue="set",bins=25,title="title here",title_l
         ax.hist(data_df.loc[data_df[hue]==h,feature],
                 bins=bins,
                 edgecolor='black',
-                color=bluish_color_list[i],
+                color=bluishColorList[i],
                 label=h
             )
 
