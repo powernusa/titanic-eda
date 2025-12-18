@@ -2,17 +2,15 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY requirements.txt /app/
+# Copy dependency spec first for better caching
+COPY requirements.txt .
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        build-essential \
-        && rm -rf /var/lib/apt/lists/*
-
+# Install Python dependencies only (no system toolchain)
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt
 
-COPY . /app
+# Copy project files
+COPY . .
 
 EXPOSE 8888
 
