@@ -21,7 +21,7 @@ This makes Titanic an excellent dataset for sharpening practical skills across:
 - categorical vs numerical comparisons
 - exploratory visualization and storytelling
 
-For more advanced, interactive visualizations (D3.js, GSAP), see my portfolio projects at **mydataaijournal.com**.
+For more advanced, interactive visualizations, see my portfolio projects at **mydataaijournal.com**.
 
 ---
 
