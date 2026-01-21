@@ -5,6 +5,7 @@ practice*.ipynb
 temp*
 *main*
 my*
+_titanic*
 
 # Ignore Jupyter auto-saved junk
 .ipynb_checkpoints/
