@@ -1,8 +1,5 @@
 # 🛳️ Titanic Exploratory Data Analysis (EDA)
 
-> **Status:** Work in progress — actively updated as I build my data analysis portfolio.
-> **Target completion:** 31 January 2026.
-
 This repository contains a complete Exploratory Data Analysis (EDA) of the classic **Titanic dataset** — one of the most iconic datasets in data science.
 
 Although _Titanic_ is often treated as a “hello world” project, the dataset is **not trivial**. It includes:
